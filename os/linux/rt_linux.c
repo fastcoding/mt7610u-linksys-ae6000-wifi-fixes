@@ -114,9 +114,11 @@ static inline VOID __RTMP_OS_Init_Timer(
 	IN PVOID data)
 {
 	if (!timer_pending(pTimer)) {
-		init_timer(pTimer);
-		pTimer->data = (unsigned long)data;
-		pTimer->function = function;
+		//init_timers();
+		timer_setup(pTimer,function,0);
+		//init_timer(pTimer);
+//		pTimer->data = (unsigned long)data;
+		//pTimer->function = function;
 	}
 }
 
@@ -1087,7 +1089,8 @@ int RtmpOSFileRead(RTMP_OS_FD osfd, char *pDataPtr, int readLen)
 		return osfd->f_op->read(osfd, pDataPtr, readLen, &osfd->f_pos);
 	} else {
 		DBGPRINT(RT_DEBUG_ERROR, ("no file read method, using vfs_read\n"));
-		return vfs_read(osfd, pDataPtr, readLen, &osfd->f_pos);
+		//return vfs_read(osfd, pDataPtr, readLen, &osfd->f_pos);
+		return kernel_read(osfd, pDataPtr, readLen, &osfd->f_pos);
 	}
 }
 
@@ -1097,7 +1100,8 @@ int RtmpOSFileWrite(RTMP_OS_FD osfd, char *pDataPtr, int writeLen)
 		return osfd->f_op->write(osfd, pDataPtr, (size_t) writeLen, &osfd->f_pos);
 	} else {
 		DBGPRINT(RT_DEBUG_ERROR, ("no file write method, using vfs_write\n"));
-		return vfs_write(osfd, pDataPtr, (size_t) writeLen, &osfd->f_pos);
+		//return vfs_write(osfd, pDataPtr, (size_t) writeLen, &osfd->f_pos);
+		return kernel_write(osfd, pDataPtr, (size_t) writeLen, &osfd->f_pos);
 	}
 }
 

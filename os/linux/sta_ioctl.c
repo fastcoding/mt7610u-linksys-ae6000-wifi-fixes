@@ -689,11 +689,11 @@ int rt_ioctl_iwaplist(struct net_device *dev,
 			break;
 		addr[i].sa_family = ARPHRD_ETHER;
 		pList = (pBssList->pList) + i;
-		memcpy(addr[i].sa_data, pList->Bssid, MAC_ADDR_LEN);
+		memcpy(addr[i].sa_data, pList->Bssid, sizeof(*pList->Bssid)); //MAC_ADDR_LEN);
 		set_quality(pAd, &qual[i], pList); /*&pAd->ScanTab.BssEntry[i]); */
 	}
 	data->length = i;
-	memcpy(extra, &addr, i*sizeof(addr[0]));
+	memcpy(extra, addr, i*sizeof(addr[0]));
 	data->flags = 1;		/* signal quality present (sort of) */
 	memcpy(extra + i*sizeof(addr[0]), &qual, i*sizeof(qual[i]));
 
